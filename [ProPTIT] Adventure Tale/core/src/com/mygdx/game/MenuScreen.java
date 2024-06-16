@@ -3,77 +3,39 @@ package com.mygdx.game;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
-public class MenuScreen implements Screen {
-	public static final int Width = 960;
-	public static final int Height = 640;
-	float playButtonWidth = 150;
-	float playButtonHeight = 70;
-	public static float iconSize = 40;
-	public static boolean checkSound = true; // true = on, false = off
-	Texture playButton;
-	Texture playButtonClick;
-	public static Texture soundOffButton;
-	public static Texture soundOffButtonClick;
-	public static Texture soundOnButton;
-	public static Texture soundOnButtonClick;
+import static helper.Constants.*;
+
+public class MenuScreen implements Screen{
+	public static final int WIDTH = APP_WIDTH;
+	public static final int HEIGHT = APP_HEIGHT;
 	Main main;
+
+	public Music bgMusic = Gdx.audio.newMusic(Gdx.files.internal(MenuBGMusicPath));
+	Menu menu;
 	public MenuScreen(Main main) {
 		this.main = main;
-		playButton = new Texture("PLAY_Default@0.5x.png");
-		playButtonClick = new Texture("PLAY_Hover@0.5x.png");
-		soundOffButton = new Texture("SOUND_OFF_Default@0.5x.png");
-		soundOffButtonClick = new Texture("SOUND_OFF_Hover@0.5x.png");
-		soundOnButton = new Texture("SOUND_ON_Default@0.5x.png");
-		soundOnButtonClick = new Texture("SOUND_ON_Hover@0.5x.png");
+		this.menu = new Menu(main);
 	}
 
 	@Override
 	public void render (float delta) {
-		Gdx.gl.glClearColor(0, 0, 0, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		main.batch.begin();
-		float xPlay = (Width - playButtonWidth) / 2;
-		float yPlay = (Height - playButtonHeight) / 2;
-		if (Gdx.input.getX() >= xPlay && Gdx.input.getX() <= xPlay + playButtonWidth && Gdx.input.getY() >= yPlay && Gdx.input.getY() <= yPlay + playButtonHeight) {
-			main.batch.draw(playButtonClick, xPlay, yPlay, playButtonWidth, playButtonHeight);
-			if (Gdx.input.isTouched()) {
-				this.dispose();
-				main.setScreen(new LevelScreen(main));
-				main.setScreen(new LevelScreen(main));
-			}
-		} else {
-			main.batch.draw(playButton, xPlay, yPlay, playButtonWidth, playButtonHeight);
-		}
-		int xSound = 12;
-		if (Gdx.input.getX() >= xSound && Gdx.input.getX() <= xSound + iconSize && Gdx.input.getY() >= Height - (xSound + iconSize) && Gdx.input.getY() <= Height - xSound) {
-
-			if (checkSound) {
-				main.batch.draw(soundOnButtonClick, xSound, xSound, iconSize, iconSize);
-				if (Gdx.input.isTouched()) {
-					checkSound = false;
-					main.batch.draw(soundOffButtonClick, xSound, xSound, iconSize, iconSize);
-				}
-			} else {
-				main.batch.draw(soundOffButtonClick, xSound, xSound, iconSize, iconSize);
-				if (Gdx.input.isTouched()) {
-					checkSound = true;
-					main.batch.draw(soundOnButtonClick, xSound, xSound, iconSize, iconSize);
-				}
-			}
-		} else {
-			if (checkSound) {
-
-				main.batch.draw(soundOnButton, xSound, xSound, iconSize, iconSize);
-			} else {
-				main.batch.draw(soundOffButton, xSound, xSound, iconSize, iconSize);
-			}
-		}
-		main.batch.end();
+		Gdx.input.setInputProcessor(menu.stage);
+		menu.update();
+		menu.stage.act(Gdx.graphics.getDeltaTime());
+		menu.stage.draw();
 	}
 
 	@Override
@@ -103,11 +65,5 @@ public class MenuScreen implements Screen {
 
 	@Override
 	public void dispose () {
-		playButton.dispose();
-		playButtonClick.dispose();
-		soundOffButton.dispose();
-		soundOnButton.dispose();
-		soundOffButtonClick.dispose();
-		soundOnButtonClick.dispose();
 	}
 }
