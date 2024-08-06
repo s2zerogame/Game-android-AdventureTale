@@ -151,6 +151,7 @@ Diễn giải:
 **Kết quả đạt được:** 
 - Game vận hành đủ tính năng theo dự tính, hiệu năng duy trì ổn định ở mức 60FPS.
 - Đồ họa, âm thanh, giao diện người chơi UI/UX đã được bổ sung để game trở nên thu hút, dễ nhìn hơn.
+- https://github.com/NguyenBui256/AdventureTale
 
 **Hướng phát triển tiếp theo:** 
 - Tiếp tục tối ưu các phần code, phần logic nhân vật để tăng hiệu năng.
